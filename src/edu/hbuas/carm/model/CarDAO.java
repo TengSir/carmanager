@@ -45,5 +45,25 @@ public class CarDAO {
 		}
 		return cars;
 	}
+	/**
+	 * 这是dao里面删除车辆信息的dao方法
+	 * @param carid
+	 * @return
+	 */
+	public boolean  deleteCarById(int carid) {
+		boolean result=false;
+		try {
+			Class.forName(className);
+			Connection  con=DriverManager.getConnection(url,username,password);
+			Statement sta=con.createStatement();
+			int count=sta.executeUpdate("delete from car where carid="+carid);
+			result=count>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
 
 }
