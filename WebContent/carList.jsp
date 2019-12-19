@@ -118,10 +118,11 @@ function    deleteCarById(id,rowNum){
 		{
 			$.get("CarServlet?method=deleteCar&carid="+id,function(data){
 					if(data=='true'){
-						document.getElementById("allCars").deleteRow(rowNum);
-						alert("删除成功");
+						//使用隐藏的方式来替代删除，防止二次删除操作出错
+						document.getElementById("allCars").rows[rowNum].style.display='none';
+						alert("删除成功!");
 					}else{
-						alert("删除失败");
+						alert("删除失败!");
 					}
 			});
 		}

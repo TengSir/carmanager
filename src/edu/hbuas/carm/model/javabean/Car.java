@@ -28,6 +28,13 @@ public class Car implements Serializable {
 	/** 售价. */
 	private Float shoujia;
 
+	@Override
+	public String toString() {
+		return "Car [carid=" + carid + ", image=" + image + ", carname=" + carname + ", series=" + series + ", shoujia="
+				+ shoujia + ", xingshilicheng=" + xingshilicheng + ", color=" + color + ", pailiang=" + pailiang
+				+ ", leixing=" + leixing + ", suozaidi=" + suozaidi + "]";
+	}
+
 	/** 行驶里程. */
 	private Float xingshilicheng;
 
@@ -47,6 +54,29 @@ public class Car implements Serializable {
 	 * �R���X�g���N�^.
 	 */
 	public Car() {
+	}
+
+	/**
+	 * @param carname
+	 * @param series
+	 * @param shoujia
+	 * @param xingshilicheng
+	 * @param color
+	 * @param pailiang
+	 * @param leixing
+	 * @param suozaidi
+	 */
+	public Car(String carname, String series, Float shoujia, Float xingshilicheng, String color, String pailiang,
+			String leixing, String suozaidi) {
+		super();
+		this.carname = carname;
+		this.series = series;
+		this.shoujia = shoujia;
+		this.xingshilicheng = xingshilicheng;
+		this.color = color;
+		this.pailiang = pailiang;
+		this.leixing = leixing;
+		this.suozaidi = suozaidi;
 	}
 
 	/**

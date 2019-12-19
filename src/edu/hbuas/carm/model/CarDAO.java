@@ -2,9 +2,12 @@ package edu.hbuas.carm.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.hbuas.carm.model.javabean.Car;
@@ -18,13 +21,13 @@ public class CarDAO {
 	 * 这是查询所有二手车信息的方法
 	 * @return
 	 */
-	public Set<Car>   listAllcars() {
-		Set<Car>  cars=new HashSet<Car>();
+	public List<Car>   listAllcars() {
+		List<Car>  cars=new ArrayList<Car>();
 		try {
 			Class.forName(className);
 			Connection  con=DriverManager.getConnection(url,username,password);
 			Statement sta=con.createStatement();
-			ResultSet rs=sta.executeQuery("select * from car");
+			ResultSet rs=sta.executeQuery("select * from car order by carid desc");
 			while(rs.next()) {
 				Car c=new Car();
 				c.setCarid(rs.getInt("carid"));
@@ -63,6 +66,37 @@ public class CarDAO {
 		}
 		return result;
 	}
+	/**
+	 * 添加车辆信息的数据库方法
+	 * @param c
+	 * @return
+	 */
+	public boolean  addCar(Car  c) {
+		boolean result=false;
+		try {
+			Class.forName(className);
+			Connection  con=DriverManager.getConnection(url,username,password);
+			PreparedStatement sta=con.prepareStatement("insert into car values(null,null,?,?,?,?,?,?,?,?)");
+			sta.setString(1, c.getCarname());
+			sta.setString(2, c.getSeries());
+			sta.setFloat(3, c.getShoujia());
+			sta.setFloat(4, c.getXingshilicheng());
+			sta.setString(5, c.getColor());
+			sta.setString(6, c.getPailiang());
+			sta.setString(7, c.getLeixing());
+			sta.setString(8, c.getSuozaidi());
+			int count=sta.executeUpdate();
+			result=count>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	
+	
+	
 	
 	
 
