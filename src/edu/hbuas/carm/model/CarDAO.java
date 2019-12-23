@@ -92,6 +92,65 @@ public class CarDAO {
 		}
 		return result;
 	}
+	/**
+	 * 修改车辆信息的dao方法
+	 * @param c
+	 * @return
+	 */
+	public boolean  updateCar(Car  c) {
+		boolean result=false;
+		try {
+			Class.forName(className);
+			Connection  con=DriverManager.getConnection(url,username,password);
+			PreparedStatement sta=con.prepareStatement("update car set carname=?,series=?,shoujia=?,xingshilicheng=?,color=?,pailiang=?,leixing=?,suozaidi=? where carid=?");
+			sta.setString(1, c.getCarname());
+			sta.setString(2, c.getSeries());
+			sta.setFloat(3, c.getShoujia());
+			sta.setFloat(4, c.getXingshilicheng());
+			sta.setString(5, c.getColor());
+			sta.setString(6, c.getPailiang());
+			sta.setString(7, c.getLeixing());
+			sta.setString(8, c.getSuozaidi());
+			sta.setInt(9, c.getCarid());
+			int count=sta.executeUpdate();
+			result=count>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 这是根据carid查询车辆信息的dao方法
+	 * @param carid
+	 * @return
+	 */
+	public Car  getCarDetailById(int carid) {
+		Car c=null;
+		try {
+			Class.forName(className);
+			Connection  con=DriverManager.getConnection(url,username,password);
+			Statement sta=con.createStatement();
+			ResultSet rs=sta.executeQuery("select * from car  where carid="+carid);
+			if(rs.next()) {
+				c=new Car();
+				c.setCarid(rs.getInt("carid"));
+				c.setCarname(rs.getString("CARNAME"));
+				c.setColor(rs.getString("color"));
+				c.setImage(rs.getString("image"));
+				c.setLeixing(rs.getString("leixing"));
+				c.setPailiang(rs.getString("pailiang"));
+				c.setSeries(rs.getString("series"));
+				c.setShoujia(rs.getFloat("shoujia"));
+				c.setSuozaidi(rs.getString("suozaidi"));
+				c.setXingshilicheng(rs.getFloat("xingshilicheng"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return c;
+	}
 	
 	
 	

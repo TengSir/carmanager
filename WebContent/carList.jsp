@@ -81,7 +81,7 @@
 	        <td class="center">${c.suozaidi }</td>
 	        <td class="center">
 <!-- 	         <a href="http://www.deathghost.cn" title="预览" class="link_icon" target="_blank">&#118;</a> -->
-	         <a href="carEdit.jsp" title="编辑" class="link_icon">&#101;</a>
+	         <a href="CarServlet?method=getCarDetailById&carid=${c.carid}" title="编辑" class="link_icon">&#101;</a>
 	         <a href="javascript:deleteCarById(${c.carid},${s.count })" title="删除" class="link_icon">&#100;</a>
 	        </td>
 	       </tr>

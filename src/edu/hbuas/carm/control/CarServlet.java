@@ -3,17 +3,13 @@ package edu.hbuas.carm.control;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Set;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import edu.hbuas.carm.model.CarDAO;
 import edu.hbuas.carm.model.javabean.Car;
-
 /**
  * Servlet implementation class CarServlet
  */
@@ -41,12 +37,70 @@ public class CarServlet extends HttpServlet {
 		{
 			addCar(request,response);
 			break;
+		}case "getCarDetailById":
+		{
+			getCarDetailById(request,response);
+			break;
+		}case "updateCar":
+		{
+			updateCar(request,response);
+			break;
 		}
 			
 		default:
 			break;
 		}
 	}
+	/**
+	 * 修改车辆信息的方法
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void updateCar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	  //1.先获取页面上修改后的内容
+		String  carid=request.getParameter("carid");
+		String  carname=request.getParameter("carname");
+		String  series=request.getParameter("series");
+		String  shoujia=request.getParameter("shoujia");
+		String  xingshilicheng=request.getParameter("xingshilicheng");
+		String  color=request.getParameter("color");
+		String  pailiang=request.getParameter("pailiang");
+		String  leixing=request.getParameter("leixing");
+		String  suozaidi=request.getParameter("suozaidi");
+		Car c=new Car(carname,series,Float.parseFloat(shoujia),Float.parseFloat(xingshilicheng),color,pailiang,leixing,suozaidi);
+		c.setCarid(Integer.parseInt(carid));
+	  //2.调用dao方法将车辆信息修改
+		boolean result=dao.updateCar(c);
+	  //3.根据修改结果跳转页面
+		if(result) {
+			response.sendRedirect("CarServlet?method=listAll");//使用重定向跳转到列表页面不会出现表单重复提交现象
+		//	request.getRequestDispatcher("CarServlet?method=listAll").forward(request, response);
+		}else {
+			request.setAttribute("updateMessage", "修改失败！");
+			request.getRequestDispatcher("carEdit.jsp").forward(request, response);
+		}
+		
+	}
+	/**
+	 * 这是根据编号查找某个车辆信息的具体方法
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void getCarDetailById(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//1.获取用户点击链接时传入的carid
+		String carid=request.getParameter("carid");
+		//2.调用dao方法根据这个id查询这个车辆信息
+		Car c=dao.getCarDetailById(Integer.parseInt(carid));
+		//3.将查询出来的car对象存储到request范围里
+		request.setAttribute("car", c);
+		//4.跳转到修改页面
+		request.getRequestDispatcher("carEdit.jsp").forward(request, response);
+	}
+	
 	/**
 	 * 这是添加二手车信息的方法
 	 * @param request
@@ -72,7 +126,8 @@ public class CarServlet extends HttpServlet {
 	 System.out.println(result);
 	//3.根据dao方法返回值来跳转到相应页面并提示添加的操作结果
 		if(result) {
-			request.getRequestDispatcher("CarServlet?method=listAll").forward(request, response);
+			response.sendRedirect("CarServlet?method=listAll");//使用重定向跳转到列表页面不会出现表单重复提交现象
+		//	request.getRequestDispatcher("CarServlet?method=listAll").forward(request, response);
 		}else {
 			request.setAttribute("addMessage", "添加失败！");
 			request.getRequestDispatcher("carAdd.jsp").forward(request, response);
@@ -110,14 +165,12 @@ public class CarServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	protected void listAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("查询呢显示所有二手车列表的方法");
-		
+		System.out.println("查询显示所有二手车列表的方法");
 		//1.直接调用cardao对象的方法查询所有二手车信息
 		List<Car> cars=dao.listAllcars();
 		System.out.println(cars.size());
 		//2.把数据存储起来
 		request.setAttribute("cars", cars);
-		
 		//3.跳转页面
 		request.getRequestDispatcher("carList.jsp").forward(request, response);
 	}
