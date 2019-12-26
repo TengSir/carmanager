@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -153,6 +154,27 @@ public class CarDAO {
 	}
 	
 	
+	/**
+	 * 根据车辆类型统计类型数量的dao方法
+	 * @return
+	 */
+	public   HashMap<String, Integer>  tongjiByType() {
+		HashMap<String, Integer> result=new HashMap<String, Integer>();
+		try {
+			Class.forName(className);
+			Connection  con=DriverManager.getConnection(url,username,password);
+			Statement sta=con.createStatement();
+			ResultSet rs=sta.executeQuery("select leixing,count(*) from car group by leixing");
+			while(rs.next()) {
+				result.put(rs.getString(1), rs.getInt(2));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+		
+	}
 	
 	
 	

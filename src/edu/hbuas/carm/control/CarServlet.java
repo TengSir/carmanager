@@ -2,12 +2,17 @@ package edu.hbuas.carm.control;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import edu.hbuas.carm.model.CarDAO;
 import edu.hbuas.carm.model.javabean.Car;
 /**
@@ -45,11 +50,39 @@ public class CarServlet extends HttpServlet {
 		{
 			updateCar(request,response);
 			break;
+		}case "tongjiByType":
+		{
+			tongjiByType(request,response);
+			break;
 		}
 			
 		default:
 			break;
 		}
+	}
+	/**
+	 * 前段ajax调用的根据车辆类型统计数据的后台方法
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void tongjiByType(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//后台方法直接调用dao统计车辆类型数据
+		HashMap<String, Integer> result=dao.tongjiByType();
+		
+		//讲统计出来的map集合数据转化成json格式
+		JSONObject  jsonObj=new JSONObject();
+		jsonObj.put("names", JSONArray.toJSON(result.keySet()));
+		jsonObj.put("counts", JSONArray.toJSON(result.values()));
+		
+		//使用servlet的输出流将数据返回给ajax对象
+		response.setContentType("text/json;charset=utf-8");
+		PrintWriter  out=response.getWriter();
+		out.write(jsonObj.toString());
+		out.flush();
+		out.close();
+		
 	}
 	/**
 	 * 修改车辆信息的方法
